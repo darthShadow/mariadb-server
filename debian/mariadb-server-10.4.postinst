@@ -16,17 +16,13 @@ ERR_LOGGER="logger -p daemon.err -t mariadb-server-$MAJOR_VER.postinst -i"
 # the install, rather than failing silently and leaving a broken install.
 set -o pipefail
 
-invoke() {
-  systemctl $1 mysql
-}
-
 case "$1" in
   configure)
-    # This is needed because mysql_install_db removes the pid file in /var/run
+    # This is needed because mysql_install_db removes the pid file in /run
     # and because changed configuration options should take effect immediately.
     # In case the server wasn't running at all it should be ok if the stop
-    # script fails. I can't tell at this point because of the cleaned /var/run.
-    set +e; invoke stop; set -e
+    # script fails. I can't tell at this point because of the cleaned /run.
+    set +e; invoke-rc.d mysql stop; set -e
 
     mysql_statedir=/usr/share/mysql
     mysql_datadir=/var/lib/mysql
@@ -164,8 +160,9 @@ EOF
   triggered)
     if [ -d /run/systemd/system ]; then
       systemctl --system daemon-reload
+    else
+      invoke-rc.d mysql restart
     fi
-    invoke restart
   ;;
 
   *)
