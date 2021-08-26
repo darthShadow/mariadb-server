@@ -42,3 +42,22 @@ ERROR 22001: Data too long for column 'in_db' at row 1
 CALL sys.table_exists('test', @identifier, @exists);
 ERROR 22001: Data too long for column 'in_table' at row 0
 SET @identifier := NULL;
+#
+# MDEV-12459: The information_schema tables for getting temporary tables
+#             info is missing, at least for innodb, there is no
+#             INNODB_TEMP_TABLE_INFO
+#
+CREATE TABLE t1 (id INT PRIMARY KEY);
+CALL sys.table_exists('test', 't1', @exists);
+SELECT @exists;
+@exists
+BASE TABLE
+CREATE TEMPORARY TABLE t1 (id INT PRIMARY KEY);
+Warnings:
+Note	1050	Table 't1' already exists
+CALL sys.table_exists('test', 't1', @exists);
+SELECT @exists;
+@exists
+TEMPORARY
+DROP TEMPORARY TABLE t1;
+DROP TABLE t1;
