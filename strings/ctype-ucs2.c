@@ -240,11 +240,11 @@ bs:
     if ((cnv= mb_wc(cs, &wc, s, e)) > 0)
     {
       s+= cnv;
-      if (wc >= '0' && wc <= '9')
+      if (MY_CHAR_IN_RANGE(wc, '0', '9'))
         wc-= '0';
-      else if (wc >= 'A' && wc <= 'Z')
+      else if (MY_CHAR_IN_RANGE(wc, 'A', 'Z'))
         wc= wc - 'A' + 10;
-      else if (wc >= 'a' && wc <= 'z')
+      else if (MY_CHAR_IN_RANGE(wc, 'a', 'z'))
         wc= wc - 'a' + 10;
       else
         break;
@@ -353,11 +353,11 @@ bs:
     if ((cnv= mb_wc(cs, &wc, s, e)) > 0)
     {
       s+= cnv;
-      if (wc >= '0' && wc <= '9')
+      if (MY_CHAR_IN_RANGE(wc, '0', '9'))
         wc-= '0';
-      else if (wc >= 'A' && wc <= 'Z')
+      else if (MY_CHAR_IN_RANGE(wc, 'A', 'Z'))
         wc= wc - 'A' + 10;
-      else if (wc >= 'a' && wc <= 'z')
+      else if (MY_CHAR_IN_RANGE(wc, 'a', 'z'))
         wc= wc - 'a' + 10;
       else
         break;
@@ -457,11 +457,11 @@ bs:
     if ((cnv= mb_wc(cs, &wc, s, e)) > 0)
     {
       s+=cnv;
-      if ( wc>='0' && wc<='9')
+      if (MY_CHAR_IN_RANGE(wc, '0', '9'))
         wc -= '0';
-      else if ( wc>='A' && wc<='Z')
+      else if (MY_CHAR_IN_RANGE(wc, 'A', 'Z'))
         wc = wc - 'A' + 10;
-      else if ( wc>='a' && wc<='z')
+      else if (MY_CHAR_IN_RANGE(wc, 'a', 'z'))
         wc = wc - 'a' + 10;
       else
         break;
@@ -570,11 +570,11 @@ bs:
     if ((cnv= mb_wc(cs, &wc, s, e)) > 0)
     {
       s+=cnv;
-      if ( wc>='0' && wc<='9')
+      if (MY_CHAR_IN_RANGE(wc, '0', '9'))
         wc -= '0';
-      else if ( wc>='A' && wc<='Z')
+      else if (MY_CHAR_IN_RANGE(wc, 'A', 'Z'))
         wc = wc - 'A' + 10;
-      else if ( wc>='a' && wc<='z')
+      else if (MY_CHAR_IN_RANGE(wc, 'a', 'z'))
         wc = wc - 'a' + 10;
       else
         break;
@@ -1099,7 +1099,7 @@ my_vsnprintf_mb2(char *dst, size_t n, const char* fmt, va_list ap)
     fmt++;
     
     /* Skip if max size is used (to be compatible with printf) */
-    while ( (*fmt >= '0' && *fmt <= '9') || *fmt == '.' || *fmt == '-')
+    while (MY_CHAR_IN_RANGE(*fmt, '0', '9') || *fmt == '.' || *fmt == '-')
       fmt++;
     
     if (*fmt == 'l')
@@ -2351,7 +2351,7 @@ my_vsnprintf_utf32(char *dst, size_t n, const char* fmt, va_list ap)
     fmt++;
     
     /* Skip if max size is used (to be compatible with printf) */
-    while ( (*fmt>='0' && *fmt<='9') || *fmt == '.' || *fmt == '-')
+    while (MY_CHAR_IN_RANGE(*fmt, '0', '9') || *fmt == '.' || *fmt == '-')
       fmt++;
     
     if (*fmt == 'l')

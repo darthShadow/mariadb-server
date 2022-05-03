@@ -996,8 +996,8 @@ bool is_sqlstate_valid(const LEX_CSTRING *sqlstate)
   {
     char c = sqlstate->str[i];
 
-    if ((c < '0' || '9' < c) &&
-	(c < 'A' || 'Z' < c))
+    if (!MY_CHAR_IN_RANGE(c, '0', '9') &&
+        !MY_CHAR_IN_RANGE(c, 'A', 'Z'))
       return false;
   }
 

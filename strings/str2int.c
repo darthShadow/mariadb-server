@@ -55,10 +55,10 @@
 #include "my_sys.h"			/* defines errno */
 #include <errno.h>
 
-#define char_val(X) (X >= '0' && X <= '9' ? X-'0' :\
-		     X >= 'A' && X <= 'Z' ? X-'A'+10 :\
-		     X >= 'a' && X <= 'z' ? X-'a'+10 :\
-		     '\177')
+#define char_val(X) (MY_CHAR_IN_RANGE(X, '0', '9') ? X-'0' :\
+                     MY_CHAR_IN_RANGE(X, 'A', 'Z') ? X-'A'+10 :\
+                     MY_CHAR_IN_RANGE(X, 'a', 'z') ? X-'a'+10 :\
+                     '\177')
 
 char *str2int(register const char *src, register int radix, long int lower,
 	      long int upper, long int *val)

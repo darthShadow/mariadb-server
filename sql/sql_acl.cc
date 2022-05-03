@@ -14704,9 +14704,10 @@ static int native_password_get_salt(const char *hash, size_t hash_length,
   for (const char *c= hash + 1; c < (hash + hash_length); c++)
   {
     /* If any non-hex characters are found, mark the password as invalid. */
-    if (!(*c >= '0' && *c <= '9') &&
-        !(*c >= 'A' && *c <= 'F') &&
-        !(*c >= 'a' && *c <= 'f'))
+    int ch= *c;
+    if (!MY_CHAR_IN_RANGE(ch, '0', '9') &&
+        !MY_CHAR_IN_RANGE(ch, 'A', 'F') &&
+        !MY_CHAR_IN_RANGE(ch, 'A', 'f'))
     {
       memcpy(out, invalid_password, sizeof(invalid_password));
       *out_length= sizeof(invalid_password);

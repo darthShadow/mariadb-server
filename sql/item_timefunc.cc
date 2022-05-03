@@ -2014,8 +2014,7 @@ static inline bool check_quotation(uint16 cfmt, bool *quotation_flag)
   return *quotation_flag;
 }
 
-#define INVALID_CHARACTER(x) (((x) >= 'A' && (x) <= 'Z') ||((x) >= '0' && (x) <= '9') || (x) >= 127 || ((x) < 32))
-
+#define INVALID_CHARACTER(x) (MY_CHAR_IN_RANGE(x, 'A', 'Z') || MY_CHAR_IN_RANGE(x, '0', '9') || (x) >= 127 || ((x) < 32))
 
 /**
   Special characters are directly output in the result
@@ -2041,7 +2040,7 @@ static uint parse_special(char cfmt, const char *ptr, const char *end,
   if (cfmt == '&' && ptr + 1 < end)
   {
     tmp1= my_toupper(system_charset_info, *(ptr+1));
-    if (tmp1 >= 'A' && tmp1 <= 'Z')
+    if (MY_CHAR_IN_RANGE(tmp1, 'A', 'Z'))
       return 0;
   }
 

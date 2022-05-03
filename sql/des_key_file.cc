@@ -64,7 +64,7 @@ load_des_key_file(const char *file_name)
     if (!(length=my_b_gets(&io,buf,sizeof(buf)-1)))
       break;					// End of file
     offset=buf[0];
-    if (offset >= '0' && offset <= '9')		// If ok key
+    if (MY_CHAR_IN_RANGE(offset, '0', '9'))	// If ok key
     {
       offset=(char) (offset - '0');
       // Remove newline and possible other control characters

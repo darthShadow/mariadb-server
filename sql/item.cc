@@ -7125,11 +7125,11 @@ void Item_float::print(String *str, enum_query_type query_type)
 }
 
 
-inline uint char_val(char X)
+static inline uint char_val(char X)
 {
-  return (uint) (X >= '0' && X <= '9' ? X-'0' :
-		 X >= 'A' && X <= 'Z' ? X-'A'+10 :
-		 X-'a'+10);
+  return (uint) (MY_CHAR_IN_RANGE(X, '0', '9') ? X-'0' :
+                 MY_CHAR_IN_RANGE(X, 'A', 'Z') ? X-'A'+10 :
+                 X-'a'+10);
 }
 
 

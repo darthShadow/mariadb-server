@@ -2655,14 +2655,14 @@ bool Item_func_soundex::fix_length_and_dec(THD *thd)
 
 static int soundex_toupper(int ch)
 {
-  return (ch >= 'a' && ch <= 'z') ? ch - 'a' + 'A' : ch;
+  return MY_CHAR_IN_RANGE(ch, 'a', 'z') ? ch - 'a' + 'A' : ch;
 }
 
 
 static char get_scode(int wc)
 {
   int ch= soundex_toupper(wc);
-  if (ch < 'A' || ch > 'Z')
+  if (!MY_CHAR_IN_RANGE(ch, 'A', 'Z'))
   {
 					// Thread extended alfa (country spec)
     return '0';				// as vokal
@@ -2679,8 +2679,8 @@ static bool my_uni_isalpha(int wc)
     - characters between 'z' and U+00C0 are controls and punctuations.
     - "U+00C0 LATIN CAPITAL LETTER A WITH GRAVE" is the first letter after 'z'.
   */
-  return (wc >= 'a' && wc <= 'z') ||
-         (wc >= 'A' && wc <= 'Z') ||
+  return MY_CHAR_IN_RANGE(wc, 'a', 'z') ||
+         MY_CHAR_IN_RANGE(wc, 'A', 'Z') ||
          (wc >= 0xC0);
 }
 
@@ -3956,15 +3956,15 @@ String *Item_func_unhex::val_str(String *str)
   if (res->length() % 2)
   {
     int hex_char;
-    *to++= hex_char= hexchar_to_int(*from++);
+    *to++= hex_char= my_hex2int(*from++);
     if ((null_value= (hex_char == -1)))
       return 0;
   }
   for (end=res->ptr()+res->length(); from < end ; from+=2, to++)
   {
     int hex_char1, hex_char2;
-    hex_char1= hexchar_to_int(from[0]);
-    hex_char2= hexchar_to_int(from[1]);
+    hex_char1= my_hex2int(from[0]);
+    hex_char2= my_hex2int(from[1]);
     if ((null_value= (hex_char1 == -1 || hex_char2 == -1)))
       return 0;
     *to= (char) ((hex_char1 << 4) | hex_char2);
@@ -5607,7 +5607,7 @@ static NATSORT_ERR to_natsort_key(const String *in, String *out,
   for (size_t pos= 0;; pos++)
   {
     char c= pos < in->length() ? (*in)[pos] : 0;
-    bool is_digit= (c >= '0' && c <= '9');
+    bool is_digit= MY_CHAR_IN_RANGE(c, '0', '9');
     if (!is_digit && (n_digits || n_lead_zeros))
     {
       /* Handle end of digits run.*/

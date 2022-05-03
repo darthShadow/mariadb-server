@@ -514,7 +514,7 @@ sql_parse_prepare(const LEX_CSTRING *file_name, MEM_ROOT *mem_root,
 
   // skip signature;
   parser->file_type.str= sign= buff + 5;
-  while (*sign >= 'A' && *sign <= 'Z' && sign < end)
+  while (MY_CHAR_IN_RANGE(*sign, 'A', 'Z') && sign < end)
     sign++;
   if (*sign != '\n')
     goto frm_error;

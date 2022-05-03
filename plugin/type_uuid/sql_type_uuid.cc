@@ -23,17 +23,17 @@
 
 static bool get_digit(char ch, uint *val)
 {
-  if (ch >= '0' && ch <= '9')
+  if (MY_CHAR_IN_RANGE(ch, '0', '9'))
   {
     *val= (uint) ch - '0';
     return false;
   }
-  if (ch >= 'a' && ch <= 'f')
+  if (MY_CHAR_IN_RANGE(ch, 'a', 'f'))
   {
     *val= (uint) ch - 'a' + 0x0a;
     return false;
   }
-  if (ch >= 'A' && ch <= 'F')
+  if (MY_CHAR_IN_RANGE(ch, 'A', 'F'))
   {
     *val= (uint) ch - 'A' + 0x0a;
     return false;

@@ -1540,7 +1540,7 @@ static const char *require_quotes(const char *name, uint name_length)
     int length= system_charset_info->charlen(name, end);
     if (length == 1 && !system_charset_info->ident_map[chr])
       return name;
-    if (length == 1 && (chr < '0' || chr > '9'))
+    if (length == 1 && !MY_CHAR_IN_RANGE(chr, '0', '9'))
       pure_digit= FALSE;
   }
   if (pure_digit)
@@ -3825,8 +3825,7 @@ static bool show_status_array(THD *thd, const char *wild,
     else
     {
       my_casedn_str(system_charset_info, name_buffer);
-      DBUG_ASSERT(name_buffer[0] >= 'a');
-      DBUG_ASSERT(name_buffer[0] <= 'z');
+      DBUG_ASSERT(MY_CHAR_IN_RANGE(name_buffer[0], 'a', 'z'));
 
       // WSREP_TODO: remove once lp:1306875 has been addressed.
       if (IF_WSREP(is_wsrep_var == FALSE, 1) &&

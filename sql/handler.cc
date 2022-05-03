@@ -2327,7 +2327,7 @@ static char *xid_to_str(char *buf, const XID &xid)
     if (i < XIDDATASIZE)
     {
       char ch= xid.data[i + 1];
-      is_next_dig= (ch >= '0' && ch <='9');
+      is_next_dig= MY_CHAR_IN_RANGE(ch, '0', '9');
     }
     if (i == xid.gtrid_length)
     {

@@ -447,11 +447,11 @@ long my_strntol_8bit(CHARSET_INFO *cs,
   i = 0;
   for (c = *s; s != e; c = *++s)
   {
-    if (c>='0' && c<='9')
+    if (MY_CHAR_IN_RANGE(c, '0', '9'))
       c -= '0';
-    else if (c>='A' && c<='Z')
+    else if (MY_CHAR_IN_RANGE(c, 'A', 'Z'))
       c = c - 'A' + 10;
-    else if (c>='a' && c<='z')
+    else if (MY_CHAR_IN_RANGE(c, 'a', 'z'))
       c = c - 'a' + 10;
     else
       break;
@@ -542,11 +542,11 @@ ulong my_strntoul_8bit(CHARSET_INFO *cs,
   for ( ; s != e; ++s)
   {
     register uchar c= *s;
-    if (c>='0' && c<='9')
+    if (MY_CHAR_IN_RANGE(c, '0', '9'))
       c -= '0';
-    else if (c>='A' && c<='Z')
+    else if (MY_CHAR_IN_RANGE(c, 'A', 'Z'))
       c = c - 'A' + 10;
-    else if (c>='a' && c<='z')
+    else if (MY_CHAR_IN_RANGE(c, 'a', 'z'))
       c = c - 'a' + 10;
     else
       break;
@@ -630,11 +630,11 @@ longlong my_strntoll_8bit(CHARSET_INFO *cs __attribute__((unused)),
   for ( ; s != e; s++)
   {
     register uchar c= *s;
-    if (c>='0' && c<='9')
+    if (MY_CHAR_IN_RANGE(c, '0', '9'))
       c -= '0';
-    else if (c>='A' && c<='Z')
+    else if (MY_CHAR_IN_RANGE(c, 'A', 'Z'))
       c = c - 'A' + 10;
-    else if (c>='a' && c<='z')
+    else if (MY_CHAR_IN_RANGE(c, 'a', 'z'))
       c = c - 'a' + 10;
     else
       break;
@@ -727,11 +727,11 @@ ulonglong my_strntoull_8bit(CHARSET_INFO *cs,
   {
     register uchar c= *s;
 
-    if (c>='0' && c<='9')
+    if (MY_CHAR_IN_RANGE(c, '0', '9'))
       c -= '0';
-    else if (c>='A' && c<='Z')
+    else if (MY_CHAR_IN_RANGE(c, 'A', 'Z'))
       c = c - 'A' + 10;
-    else if (c>='a' && c<='z')
+    else if (MY_CHAR_IN_RANGE(c, 'a', 'z'))
       c = c - 'a' + 10;
     else
       break;

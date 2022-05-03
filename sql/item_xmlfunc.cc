@@ -1471,7 +1471,7 @@ my_xpath_init(MY_XPATH *xpath)
 static int
 my_xdigit(int c)
 {
-  return ((c) >= '0' && (c) <= '9');
+  return MY_CHAR_IN_RANGE(c, '0', '9');
 }
 
 

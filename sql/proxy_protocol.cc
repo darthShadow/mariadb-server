@@ -317,7 +317,7 @@ static int parse_subnet(char *addr_str, struct subnet *subnet)
 
     do
     {
-      if (*pmask < '0' || *pmask > '9')
+      if (!MY_CHAR_IN_RANGE(*pmask, '0', '9'))
         return -1;
       b= 10 * b + *pmask - '0';
       if (b > MAX_MASK_BITS(subnet->family))

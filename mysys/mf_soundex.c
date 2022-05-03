@@ -96,7 +96,7 @@ static char get_scode(CHARSET_INFO * cs,char **ptr, pbool remove_garbage)
       (*ptr)++;
   }
   ch=my_toupper(cs,**ptr);
-  if (ch < 'A' || ch > 'Z')
+  if (!MY_CHAR_IN_RANGE(ch, 'A', 'Z'))
   {
     if (my_isalpha(cs,ch))		/* If extended alfa (country spec) */
       return '0';			/* threat as vokal */

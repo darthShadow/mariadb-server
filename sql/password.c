@@ -227,10 +227,10 @@ check_scramble_323(const unsigned char *scrambled, const char *message,
 
 static inline uint8 char_val(uint8 X)
 {
-  return (uint) (X >= '0' && X <= '9' ? X-'0' :
-      X >= 'A' && X <= 'Z' ? X-'A'+10 : X-'a'+10);
+  return (uint) (MY_CHAR_IN_RANGE(X, '0', '9') ? X-'0' :
+                 MY_CHAR_IN_RANGE(X, 'A', 'Z') ? X-'A'+10 :
+                 X-'a'+10);
 }
-
 
 /*
     Convert password from hex string (as stored in mysql.user) to binary form.

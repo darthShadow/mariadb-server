@@ -15,6 +15,8 @@
 
 #include <mysql/plugin_encryption.h>
 #include <mysqld_error.h>
+#include <my_global.h>
+#include <m_string.h>
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -632,37 +634,19 @@ int HCData::curl_run (const char *url, std::string *response,
   return is_error ? OPERATION_ERROR : OPERATION_OK;
 }
 
-static inline int c2xdigit (int c)
-{
-  if (c > 9)
-  {
-    c -= 'A' - '0';
-    if (c > 15)
-    {
-      c -= 'a' - 'A';
-    }
-  }
-  return c;
-}
-
 static int hex2buf (unsigned int max_length, unsigned char *dstbuf,
                     int key_len, const char *key)
 {
   int length = 0;
   while (key_len >= 2)
   {
-    int c1 = key[0];
-    int c2 = key[1];
-    if (! isxdigit(c1) || ! isxdigit(c2))
+    int c1 = my_hex2int(key[0]);
+    int c2 = my_hex2int(key[1]);
+    if ((c1 | c2) < 0)
     {
       break;
     }
-    if (max_length)
-    {
-      c1 = c2xdigit(c1 - '0');
-      c2 = c2xdigit(c2 - '0');
-      dstbuf[length++] = (c1 << 4) + c2;
-    }
+    max_length && (dstbuf[length++] = (c1 << 4) + c2);
     key += 2;
     key_len -= 2;
   }
@@ -1380,10 +1364,10 @@ maria_declare_plugin(hashicorp_key_management)
   PLUGIN_LICENSE_GPL,
   hashicorp_key_management_plugin_init,
   hashicorp_key_management_plugin_deinit,
-  0x0105 /* 1.05 */,
+  0x0201 /* 2.01 */,
   NULL, /* status variables */
   settings,
-  "1.05",
+  "2.01",
   MariaDB_PLUGIN_MATURITY_STABLE
 }
 maria_declare_plugin_end;

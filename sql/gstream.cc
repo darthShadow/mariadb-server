@@ -32,7 +32,7 @@ enum Gis_read_stream::enum_tok_types Gis_read_stream::get_next_toc_type()
     return eostream;
   if (my_isvar_start(&my_charset_bin, *m_cur))
     return word;
-  if ((*m_cur >= '0' && *m_cur <= '9') || *m_cur == '-' || *m_cur == '+')
+  if (MY_CHAR_IN_RANGE(*m_cur, '0', '9') || *m_cur == '-' || *m_cur == '+')
     return numeric;
   if (*m_cur == '(')
     return l_bra;
@@ -103,7 +103,7 @@ bool Gis_read_stream::get_next_number(double *d)
   skip_space();
 
   if ((m_cur >= m_limit) ||
-      ((*m_cur < '0' || *m_cur > '9') && *m_cur != '-' && *m_cur != '+'))
+      (!MY_CHAR_IN_RANGE(*m_cur, '0', '9') && *m_cur != '-' && *m_cur != '+'))
   {
     set_error_msg("Numeric constant expected");
     return 1;

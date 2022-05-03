@@ -164,7 +164,7 @@ static my_bool does_drive_exists(char drive_letter)
   DWORD drive_mask= GetLogicalDrives();
   drive_letter= toupper(drive_letter);
 
-  return (drive_letter >= 'A' && drive_letter <= 'Z') &&
+  return MY_CHAR_IN_RANGE(drive_letter, 'A', 'Z') &&
          (drive_mask & (0x1 << (drive_letter - 'A')));
 }
 

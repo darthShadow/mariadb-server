@@ -529,9 +529,9 @@ bool read_hex_bucket_endpoint(json_engine_t *je, Field *field, String *out,
     
   for (auto pc= je->value; pc < je->value + je->value_len; pc+=2)
   {
-    int hex_char1= hexchar_to_int(pc[0]);
-    int hex_char2= hexchar_to_int(pc[1]);
-    if (hex_char1 == -1 || hex_char2 == -1)
+    int hex_char1= my_hex2int(pc[0]);
+    int hex_char2= my_hex2int(pc[1]);
+    if ((hex_char1 | hex_char2) < 0)
     {
       *err= "Expected a hex string";
       return true;

@@ -237,4 +237,46 @@ static inline const char *safe_str(const char *str)
 static inline size_t safe_strlen(const char *str)
 { return str ? strlen(str) : 0; }
 
+/*
+  Checking if the character "a" is within the boundaries
+  from "b" to "c" inclusive. Warning: since this is a macro,
+  the argument "b" can be evaluated twice.
+
+  This macro allows us to reduce the number of checks in
+  typical conditions like "if (ch <= '0' && ch >= '9')" from
+  two to one check and one conditional jump, while the result
+  of the subtraction "(ch - '0')" that occurs here can often
+  be reused by the compiler later, for example, if below it
+  says "x = x * 10 + (ch - '0');" etc. Each conditional branch
+  instruction can be mispredicted by the processor, causing
+  execution pipeline to stall and drop the results of speculative
+  calculations (this will lead to large penalties), plus branch
+  instructions themselves clog the branch prediction buffer
+  in the CPU. Therefore, in the general case, getting rid
+  of the second check, we win in performance:
+*/
+#define MY_CHAR_IN_RANGE(a, b, c) \
+  ((unsigned) ((a) - (b)) <= (unsigned) ((c) - (b)))
+
+/*
+  Convert a hex digit into its numeric value
+  SYNOPSIS
+    my_hex2int
+    ch hex digit to convert
+  USAGE
+  RETURN VALUES
+    an integer value in the range 0..15
+    -1 on error
+*/
+static inline int my_hex2int(int ch)
+{
+  if (MY_CHAR_IN_RANGE(ch, '0', '9'))
+    return ch - '0';
+  else if (MY_CHAR_IN_RANGE(ch, 'a', 'f'))
+    return 10 + ch - 'a';
+  else if (MY_CHAR_IN_RANGE(ch, 'A', 'F'))
+    return 10 + ch - 'A';
+  return -1;
+}
+
 #endif

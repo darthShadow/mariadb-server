@@ -32266,34 +32266,6 @@ static void my_coll_lexem_print_error(MY_COLL_LEXEM *lexem,
 
 
 /*
-  Convert a hex digit into its numeric value
-  
-  SYNOPSIS
-    ch2x
-    ch                   hex digit to convert
-  USAGE
-  
-  RETURN VALUES
-    an integer value in the range 0..15
-    -1 on error
-*/
-
-static int ch2x(int ch)
-{
-  if (ch >= '0' && ch <= '9')
-    return ch - '0';
-  
-  if (ch >= 'a' && ch <= 'f')
-    return 10 + ch - 'a';
-  
-  if (ch >= 'A' && ch <= 'F')
-    return 10 + ch - 'A';
-  
-  return -1;
-}
-
-
-/*
   Collation language lexical parser:
   Scans the next lexem.
   
@@ -32386,7 +32358,7 @@ static my_coll_lexem_num my_coll_lexem_next(MY_COLL_LEXEM *lexem)
       
       beg+= 2;
       lexem->code= 0;
-      while ((beg < lexem->end) && ((ch= ch2x(beg[0])) >= 0))
+      while ((beg < lexem->end) && ((ch= my_hex2int(beg[0])) >= 0))
       { 
         lexem->code= (lexem->code << 4) + ch;
         beg++;
@@ -33429,12 +33401,13 @@ wstr_to_str(char *str, size_t length, my_wc_t *wc, size_t wlength)
   size_t i, rem;
   for (s= str, i= 0; (rem= (end - s)) > 0 && i < wlength; i++)
   {
-    if ((wc[i] >= '0' && wc[i] <= '9') ||
-        (wc[i] >= 'a' && wc[i] <= 'z') ||
-        (wc[i] >= 'A' && wc[i] <= 'Z'))
-      s+= my_snprintf(s, rem, "%c", (int) wc[i]);
+    int ch= wc[i];
+    if (MY_CHAR_IN_RANGE(ch, '0', '9') ||
+        MY_CHAR_IN_RANGE(ch, 'a', 'z') ||
+        MY_CHAR_IN_RANGE(ch, 'A', 'Z'))
+      s+= my_snprintf(s, rem, "%c", ch);
     else
-      s+= my_snprintf(s, rem, "\\u%04X", (int) wc[i]);
+      s+= my_snprintf(s, rem, "\\u%04X", ch);
   }
 }
 

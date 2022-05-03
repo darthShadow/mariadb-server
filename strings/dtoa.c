@@ -1405,7 +1405,7 @@ static double my_strtod_int(const char *s00, char **se, int *error, char *buf, s
   }
   s0= s;
   y= z= 0;
-  for (nd= nf= 0; s < end && (c= *s) >= '0' && c <= '9'; nd++, s++)
+  for (nd= nf= 0; s < end && MY_CHAR_IN_RANGE((c= *s), '0', '9'); nd++, s++)
     if (nd < 9)
       y= 10*y + c - '0';
     else if (nd < 16)
@@ -1418,7 +1418,7 @@ static double my_strtod_int(const char *s00, char **se, int *error, char *buf, s
     {
       for (; s < end && (c= *s) == '0'; ++s)
         nz++;
-      if (s < end && (c= *s) > '0' && c <= '9')
+      if (s < end && MY_CHAR_IN_RANGE((c= *s), '1', '9'))
       {
         s0= s;
         nf+= nz;
@@ -1427,7 +1427,7 @@ static double my_strtod_int(const char *s00, char **se, int *error, char *buf, s
       }
       goto dig_done;
     }
-    for (; s < end && (c= *s) >= '0' && c <= '9'; ++s)
+    for (; s < end && MY_CHAR_IN_RANGE((c= *s), '0', '9'); ++s)
     {
  have_dig:
       /*
@@ -1470,14 +1470,14 @@ static double my_strtod_int(const char *s00, char **se, int *error, char *buf, s
         /* fall through */
       case '+': c= *++s;
       }
-    if (s < end && c >= '0' && c <= '9')
+    if (s < end && MY_CHAR_IN_RANGE(c, '0', '9'))
     {
       while (s < end && c == '0')
         c= *++s;
-      if (s < end && c > '0' && c <= '9') {
+      if (s < end && MY_CHAR_IN_RANGE(c, '1', '9')) {
         L= c - '0';
         s1= s;
-        while (++s < end && (c= *s) >= '0' && c <= '9')
+        while (++s < end && MY_CHAR_IN_RANGE((c= *s), '0', '9'))
           L= 10*L + c - '0';
         if (s - s1 > 8 || L > 19999)
           /* Avoid confusion from exponents
