@@ -17259,10 +17259,25 @@ create_tmp_table(THD *thd, TMP_TABLE_PARAM *param, List<Item> &fields,
         field->set_null();
       else
       {
+        uchar * ptr;
         field->set_notnull();
-        memcpy(field->ptr,
-               orig_field->ptr_in_record(orig_field->table->s->default_values),
-               field->pack_length_in_rec());
+        if (orig_field->table->s->field)
+        {
+          ptr= orig_field->table->s->field[orig_field->field_index]->ptr;
+        }
+        else
+        {
+          DBUG_ASSERT(orig_field->table->s->tmp_table != NO_TMP_TABLE);
+          /*
+            It is temporary table without array of field, so get the
+            pointer via offset (a temporary table will not have default()
+            function over its fields, so this method will work.
+          */
+          ptr= (uchar*)
+            orig_field->ptr_in_record(orig_field->table->s->default_values);
+        }
+
+        memcpy(field->ptr, ptr, field->pack_length_in_rec());
       }
     } 
 
