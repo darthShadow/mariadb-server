@@ -70,7 +70,6 @@ fi
 # clean away the systemd stanzas so the package can build without them.
 if ! apt-cache madison libsystemd-dev | grep 'libsystemd-dev' >/dev/null 2>&1
 then
-  sed '/dh-systemd/d' -i debian/control
   sed '/libsystemd-dev/d' -i debian/control
   sed 's/ --with systemd//' -i debian/rules
   sed '/systemd/d' -i debian/rules
@@ -87,7 +86,7 @@ then
 fi
 
 ## Skip TokuDB if arch is not amd64
-if [[ ! $(dpkg-architecture -q DEB_BUILD_ARCH) =~ amd64 ]]
+if [[ ! $(dpkg-architecture -qDEB_BUILD_ARCH) =~ amd64 ]]
 then
   sed '/Package: mariadb-plugin-tokudb/,/^$/d' -i debian/control
 fi
@@ -99,15 +98,6 @@ sed '/Package: mariadb-plugin-aws-key-management-10.4/,/^$/d' -i debian/control
 if [[ ! -f /usr/local/include/thrift/Thrift.h && ! -f /usr/include/thrift/Thrift.h ]]
 then
   sed '/Package: mariadb-plugin-cassandra/,/^$/d' -i debian/control
-fi
-
-# From Debian Stretch/Ubuntu Bionic onwards dh-systemd is just an empty
-# transitional metapackage and the functionality was merged into debhelper.
-# In Ubuntu Hirsute is was completely removed, so it can't be referenced anymore.
-# Keep using it only on Debian Jessie and Ubuntu Xenial.
-if apt-cache madison dh-systemd | grep 'dh-systemd' >/dev/null 2>&1
-then
-  sed 's/debhelper (>= 9.20160709~),/debhelper (>= 9), dh-systemd,/' -i debian/control
 fi
 
 # Adjust changelog, add new version
